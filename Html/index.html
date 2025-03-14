@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Videojuego de Combates por Turnos</title>
+  <link rel="stylesheet" href="css/estilo.css">
+  <link rel="icon" type="image/png" href="Imagenes/Escenarios/logotipo.jpeg">
+</head>
+
+<body>
+  <!-- PANTALLA DE INICIO -->
+  <div id="inicio" class="pantalla">
+    <h1>Politics Street Fighter</h1>
+    <button id="nuevaPartida">Nueva Partida</button>
+    <button id="continuarPartida">Continuar Partida</button>
+    <button id="eliminarDatos">Eliminar Datos</button>
+    <button id="repositorio">Repositorio</button>
+  </div>
+
+  <!-- PANTALLA DEL CREADOR DE PERSONAJES -->
+  <div id="creador" class="pantalla" style="display:none;">
+    <h2>Creador de Personajes</h2>
+    <form id="formCreador">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" required>
+      <label for="imagen">Selecciona tu cara:</label>
+      <select id="imagen">
+        <option value="Imagenes/personajes/rajoy1.jpg">Cara 1</option>
+        <option value="Imagenes/personajes/PedroSanchez.jpeg">Cara 2</option>
+        <option value="Imagenes/personajes/feijo-amistades-peligrosas-1-lqsomos.jpg">Cara 3</option>
+      </select>
+      <button type="submit">Crear Personaje</button>
+    </form>
+    <img id="vistaPrevia" src="Imagenes/personajes/rajoy1.jpg" alt="Vista previa de la cara" class="vista-previa">
+    <button id="volverInicio">Volver</button>
+  </div>
+
+  <!-- PANTALLA DEL LOBBY -->
+  <div id="lobby" class="pantalla" style="display:none;">
+    <h2>Lobby</h2>
+    <p id="estadoPersonaje"></p>
+    <button id="irTienda">Ir a la Tienda</button>
+    <button id="irInventario">Inventario</button>
+    <button id="irCombate">Entrar en Combate</button>
+    <button id="volverInicioDesdeLobby">Volver a Inicio</button>
+  </div>
+
+  <!-- PANTALLA DE LA TIENDA -->
+  <div id="tienda" class="pantalla" style="display:none;">
+    <h2>Tienda</h2>
+    <div id="productosTienda"></div>
+    <img id="fondoTienda" src="Imagenes/Escenarios/Cafeteria.jpg" Escenario de Tienda" class="imagen-escenario">
+    <button id="volverLobbyDesdeTienda">Volver al Lobby</button>
+  </div>
+
+  <!-- PANTALLA INVENTARIO -->
+  <div id="inventario" class="pantalla" style="display:none;">
+    <h2>Inventario</h2>
+    <div id="contenidoInventario"></div>
+    <button id="volverLobbyDesdeInventario">Volver al Lobby</button>
+  </div>
+
+  <!-- PANTALLA COMBATE -->
+  <div id="combate" class="pantalla" style="display:none;">
+    <h2>Combate</h2>
+    <div id="estadoCombate">
+      <p id="estadoJugador"></p>
+      <p id="estadoEnemigo"></p>
+      <img id="fondoCombate" src="Imagenes/Escenarios/Congreso.jpg" Escenario de Combate" class="imagen-escenario">
+    </div>
+    <div id="accionesCombate">
+      <button id="atacar">Atacar</button>
+      <button id="defender">Defender</button>
+      <button id="huir">Huir</button>
+    </div>
+    <button id="salirCombate">Salir del Combate</button>
+  </div>
+
+
+  <div id="notificacion" class="notificacion" style="display:none;"></div>
+
+
+  <script src="js/almacenamiento.js"></script>
+  <script src="js/Arma.js"></script>
+  <script src="js/Combate.js"></script>
+  <script src="js/Enemigo.js"></script>
+  <script src="js/Inventario.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/navegacion.js"></script>
+  <script src="js/Tienda.js"></script>
+  <script>
+    function mostrarPantalla(id) {
+
+      document.querySelectorAll('.pantalla').forEach(p => {
+        p.style.display = 'none';
+      });
+
+
+      const pantalla = document.getElementById(id);
+      if (pantalla) {
+        pantalla.style.display = 'block';
+
+        if (id === 'lobby' && typeof actualizarEstadoLobby === 'function') {
+          actualizarEstadoLobby();
+        }
+      }
+    }
+
+    function mostrarNotificacion(mensaje) {
+      const notificacion = document.getElementById('notificacion');
+      notificacion.innerText = mensaje;
+      notificacion.style.display = 'block';
+      setTimeout(() => {
+        notificacion.style.display = 'none';
+      }, 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('nuevaPartida').addEventListener('click', () => {
+        mostrarPantalla('creador');
+      });
+
+      document.getElementById('continuarPartida').addEventListener('click', () => {
+        mostrarPantalla('lobby');
+      });
+
+      document.getElementById('eliminarDatos').addEventListener('click', () => {
+
+        alert('Datos eliminados');
+      });
+
+      document.getElementById('repositorio').addEventListener('click', () => {
+        window.location.href = 'https://github.com/tu-repositorio';
+      });
+
+      document.getElementById('volverInicio').addEventListener('click', () => {
+        mostrarPantalla('inicio');
+      });
+
+      document.getElementById('irTienda').addEventListener('click', () => {
+        mostrarPantalla('tienda');
+      });
+
+      document.getElementById('irInventario').addEventListener('click', () => {
+        mostrarPantalla('inventario');
+      });
+
+      document.getElementById('irCombate').addEventListener('click', () => {
+        mostrarPantalla('combate');
+      });
+
+      document.getElementById('volverLobbyDesdeTienda').addEventListener('click', () => {
+        mostrarPantalla('lobby');
+      });
+
+      document.getElementById('volverLobbyDesdeInventario').addEventListener('click', () => {
+        mostrarPantalla('lobby');
+      });
+
+      document.getElementById('salirCombate').addEventListener('click', () => {
+        mostrarPantalla('lobby');
+      });
+
+      document.getElementById('volverInicioDesdeLobby').addEventListener('click', () => {
+        mostrarPantalla('inicio');
+      });
+
+
+      document.getElementById('imagen').addEventListener('change', (e) => {
+        const imagenSeleccionada = e.target.value;
+        document.getElementById('vistaPrevia').src = imagenSeleccionada;
+      });
+
+
+      document.getElementById('formCreador').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nombre = document.getElementById('nombre').value;
+        if (nombre.trim() === "") {
+          alert("Por favor, ingresa un nombre válido.");
+          return;
+        }
+        const imagenSeleccionada = document.getElementById('imagen').value;
+        personajeActual = new Personaje(nombre);
+        personajeActual.imagen = imagenSeleccionada;
+
+        const armaBasica = new Arma("Bastón", 5, 0, "img/armas/baston.png");
+        personajeActual.armaEquipada = armaBasica;
+        guardarPartida(personajeActual);
+        actualizarEstadoLobby();
+        mostrarPantalla('lobby');
+        mostrarNotificacion('Personaje creado y guardado exitosamente.');
+      });
+    });
+  </script>
+</body>
+
+</html>
